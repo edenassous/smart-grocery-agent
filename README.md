@@ -115,6 +115,7 @@ crontab -e
 
 ## 📂 Project structure
 
+```text
 smart-grocery-agent/
 ├── agent.py            Agent loop with streaming events
 ├── api.py              FastAPI server + SSE endpoint
@@ -130,6 +131,7 @@ smart-grocery-agent/
 │       ├── page.tsx    Main UI with SSE consumer
 │       └── layout.tsx
 └── README.md
+```
 
 ---
 
