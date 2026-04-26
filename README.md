@@ -23,42 +23,46 @@ Output:
 
 ---
 
-## 🏗️ Architecture┌─────────────────────────────────────┐
-│   Next.js Frontend (port 3000)       │
-│   React + Tailwind + SSE streaming   │
-└──────────────┬──────────────────────┘
-│ POST /api/search
-┌──────────────▼──────────────────────┐
-│   FastAPI Server (port 8000)         │
-│   SSE endpoint                       │
-└──────────────┬──────────────────────┘
-│
-┌──────────────▼──────────────────────┐
-│   Agent Layer                        │
-│   Claude Opus 4 + 4 tools           │
-│   - parse_shopping_list              │
-│   - search_product (fuzzy + rules)   │
-│   - get_delivery_info                │
-│   - optimize_basket (ILP)            │
-└──────────────┬──────────────────────┘
-│
-┌───────────┼───────────┐
-▼           ▼           ▼
-┌──────┐  ┌────────┐  ┌──────────┐
-│ DB   │  │ Search │  │Optimizer │
-│SQLite│  │rapidfuzz│  │PuLP/CBC │
-│400K  │  │+ rules  │  │MILP     │
-│rows  │  │         │  │solver   │
-└───┬──┘  └────────┘  └──────────┘
-│
-│ Daily cron refresh
-┌───▼─────────────────────────┐
-│ Pipeline                    │
-│ il-supermarket-scraper      │
-│ → 3 chains, 60+ XML/day     │
-│ → custom XML parser         │
-│ → SQLite                    │
-└─────────────────────────────┘
+## 🏗️ Architecture
+
+                ┌─────────────────────────────┐
+                │  Next.js Frontend (:3000)   │
+                │  React + Tailwind + SSE     │
+                └──────────────┬──────────────┘
+                               │ POST /api/search
+                ┌──────────────▼──────────────┐
+                │  FastAPI Server (:8000)     │
+                │  SSE streaming endpoint     │
+                └──────────────┬──────────────┘
+                               │
+                ┌──────────────▼──────────────┐
+                │   Agent Layer               │
+                │   Claude Opus 4 + 4 tools   │
+                │                             │
+                │   • parse_shopping_list     │
+                │   • search_product          │
+                │   • get_delivery_info       │
+                │   • optimize_basket (ILP)   │
+                └──────────────┬──────────────┘
+                               │
+            ┌──────────────────┼──────────────────┐
+            ▼                  ▼                  ▼
+     ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+     │   Database   │  │    Search    │  │  Optimizer   │
+     │   SQLite     │  │   rapidfuzz  │  │   PuLP/CBC   │
+     │   400K rows  │  │   + custom   │  │   MILP       │
+     │              │  │   scoring    │  │   solver     │
+     └──────┬───────┘  └──────────────┘  └──────────────┘
+            │
+            │ Daily cron refresh
+            │
+     ┌──────▼────────────────────┐
+     │  Pipeline                 │
+     │  il-supermarket-scraper   │
+     │  → 3 chains, 60+ XML/day  │
+     │  → Custom XML parser      │
+     │  → SQLite                 │
+     └───────────────────────────┘
 
 ---
 
@@ -110,21 +114,21 @@ crontab -e
 ---
 
 ## 📂 Project structure
-veggie-agent/
-├── agent.py                # Agent loop with streaming events
-├── api.py                  # FastAPI server + SSE endpoint
-├── main_real.py            # CLI entry point
-├── tools_real.py           # Tools the agent can call
-├── search_engine.py        # Smart fuzzy search with custom scoring
-├── optimizer.py            # ILP solver (PuLP) for basket splitting
-├── parser.py               # XML → SQLite parser (handles 2 schemas)
-├── pipeline.py             # End-to-end data pipeline
-├── daily_refresh.py        # Cron-friendly daily update
+
+smart-grocery-agent/
+├── agent.py            Agent loop with streaming events
+├── api.py              FastAPI server + SSE endpoint
+├── main_real.py        CLI entry point
+├── tools_real.py       Tools the agent can call
+├── search_engine.py    Smart fuzzy search with custom scoring
+├── optimizer.py        ILP solver (PuLP) for basket splitting
+├── parser.py           XML → SQLite parser (handles 2 schemas)
+├── pipeline.py         End-to-end data pipeline
+├── daily_refresh.py    Cron-friendly daily update
 ├── frontend/
-│   ├── app/
-│   │   ├── page.tsx        # Main UI with SSE consumer
-│   │   └── layout.tsx
-│   └── ...
+│   └── app/
+│       ├── page.tsx    Main UI with SSE consumer
+│       └── layout.tsx
 └── README.md
 
 ---
