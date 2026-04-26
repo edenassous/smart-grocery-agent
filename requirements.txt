@@ -1,0 +1,18 @@
+# Core: agent + LLM
+anthropic>=0.40.0
+python-dotenv>=1.0.0
+
+# Optimizer
+pulp>=2.7.0
+
+# Search
+rapidfuzz>=3.0.0
+
+# Pipeline
+il-supermarket-scraper>=1.0.0
+il-supermarket-parser>=0.2.0
+
+# Backend API
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.0.0

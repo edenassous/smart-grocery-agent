@@ -1,0 +1,41 @@
+# Secrets
+.env
+*.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+
+# Data files (גדולים מדי לגיט)
+dumps/
+real_prices.db
+veggies.db
+*.db-journal
+
+# Logs
+logs/
+*.log
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Backup files
+*.backup
+*.bak
+
